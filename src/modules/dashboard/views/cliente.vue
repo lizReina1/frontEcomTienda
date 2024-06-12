@@ -1,0 +1,60 @@
+<template>
+  <div>
+    <cliente-form v-if="isFormVisible" :cliente="selectedcliente" :isEditing="isEditing" @submit="handleFormSubmit" @cancelar="cancelarOperacion"/>
+    <cliente-list v-else :clientes="clientes" @create="handleCreate" @edit="handleEdit" @view="handleView" @delete="handleDelete" />
+  </div>
+</template>
+
+<script>
+import clienteForm from '../components/clienteForm.vue';
+import clienteList from '../components/clienteList.vue';
+
+export default {
+  name: 'cliente',
+  components: {
+    clienteForm,
+    clienteList
+  },
+  data() {
+    return {
+      clientes: [
+        { id: 1, fecha: '2024-05-14', total: 15 }
+      ],
+      isFormVisible: false,
+      isEditing: false,
+      selectedcliente: null
+    };
+  },
+  methods: {
+    handleCreate() {
+      this.selectedcliente = { fecha: '', total: 0 };
+      this.isEditing = false;
+      this.isFormVisible = true;
+    },
+    handleEdit(cliente) {
+      this.selectedcliente = { ...cliente };
+      this.isEditing = true;
+      this.isFormVisible = true;
+    },
+    handleView(cliente) {
+      // Aquí podrías implementar la lógica para ver los detalles de la cliente.
+      alert(`Detalles de la cliente: \nFecha: ${cliente.fecha}\nTotal: ${cliente.total}`);
+    },
+    handleDelete(id) {
+      this.clientes = this.clientes.filter(cliente => cliente.id !== id);
+    },
+    handleFormSubmit(cliente) {
+      if (this.isEditing) {
+        this.clientes = this.clientes.map(v => (v.id === cliente.id ? cliente : v));
+      } else {
+        cliente.id = this.clientes.length + 1;
+        this.clientes.push(cliente);
+      }
+      this.isFormVisible = false;
+    },
+     cancelarOperacion() {
+      this.isFormVisible = false;
+    }
+  }
+};
+</script>
