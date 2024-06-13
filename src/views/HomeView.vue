@@ -39,7 +39,7 @@
                 <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
                   <div class="count-box pb-5 pt-0 pt-lg-5">
                     <i class="bi bi-award"></i>
-                    <span data-purecounter-start="0" data-purecounter-end="22" class="purecounter">0</span>
+                    <span data-purecounter-start="0" data-purecounter-end="22" class="purecounter">7</span>
                     <p>Reconocimientos</p>
                   </div>
                 </div>
@@ -63,7 +63,7 @@
                   <p class="card-text">Precio: ${{ producto.price }}</p>
                   <p class="card-text">Stock: {{ producto.stock }}</p>
                   <!-- Agrega más detalles del producto si es necesario -->
-                  <a href="#" class="btn btn-primary">Ver detalles</a>
+                  <a href="/login" class="btn btn-primary">Ver detalles</a>
                 </div>
               </div>
             </div>
