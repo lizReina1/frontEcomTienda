@@ -7,7 +7,7 @@
                     </div>
                      <ul>
                     <li v-if="showDashboardLink" :class="{ 'active': activeTab === 'Dashboard' }">
-                        <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Dashboard')">
+                        <a href="https://dashboardpython-production.up.railway.app/" class="text-decoration-none d-flex align-items-start" @click="activateTab('Dashboard')">
                             <div class="fas fa-box pt-2 me-3"></div>
                             <div class="d-flex flex-column">
                                 <div class="link">Dashboard</div>
@@ -90,6 +90,12 @@
                     </div>
                     <div>
                          <div class="col-sm-10">
+                            <h1 v-if="!activeTab">Bienvenido</h1>
+
+                            <div v-else>
+                           <!--  <div v-if="activeTab === 'Dashboard'">
+                                
+                            </div> -->
                             <div v-if="activeTab === 'Ventas'">
                                 <venta />
                             </div>
@@ -107,6 +113,7 @@
                             </div>
                             <div v-if="activeTab === 'Cliente'">
                                 <cliente />
+                            </div>
                             </div>
                         </div>
                     </div>
