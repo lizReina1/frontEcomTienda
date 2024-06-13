@@ -12,18 +12,18 @@
             <div id="alert" class="mt-1" role="alert"></div>
             <slot name="additional-fields"></slot>
             <div class="form-element">
-              <span id="input-header">Correo Electronico</span>
-              <input type="email" v-model="form.email" placeholder="email@gmail.com">
+              <span id="input-header">Nombre de Usuario</span>
+              <input type="text" v-model="form.username" placeholder="username" required />
             </div>
             <div class="form-element">
               <span id="input-header">Password</span>
               <div class="row p-0">
                 <div class="d-flex align-items-center">
-                  <input type="password" v-model="form.password" placeholder="pass*****">
+                  <input type="password" v-model="form.password" placeholder="pass*****" required />
                   <i class="fas fa-eye-slash eye"></i>
                 </div>
               </div>
-              <a href="#" class="text-info">¿Olvido su contraseña?</a>
+              <a href="#" class="text-info">¿Olvidó su contraseña?</a>
             </div>
             <div class="form-element">
               <div class="row invalid">
@@ -47,6 +47,7 @@
 
 <script>
 import axios from 'axios';
+
 export default {
   props: {
     title: {
@@ -73,55 +74,56 @@ export default {
   data() {
     return {
       form: {
-        email: '',
+        username: '',
         password: '',
-        // Aquí no es necesario definir confirmPassword, ya que se usará en el slot
       },
-      user: Array,
     };
   },
   methods: {
-    handleSubmit() {
-        console.log('fetcj', this.user);
-        this.fetchUserId(14)
-      this.$emit('submit', this.form);
-    },
-  fetchUserId(id) {
-  return axios.post('http://18.218.15.90:8080/graphql', {
-    query: `
-      {
-        user(id: "${id}") {
-        email
-        id
-        password
-        role
-        username
+    async handleSubmit() {
+      const query = `
+        mutation {
+          loginUser(username: "${this.form.username}", password: "${this.form.password}") {
+            id
+            token
+            username
+            email
+            role
+          }
         }
+      `;
+      try {
+        const response = await axios.post('http://18.218.15.90:8080/graphql', { query });
+        const userData = response.data.data.loginUser;
+        if (userData) {
+          // Guardar el token en el localStorage o manejarlo según sea necesario
+          localStorage.setItem('token', userData.token);
+           console.log('Login', this.form);
+        localStorage.setItem('username', userData.username); // Almacena el nombre de usuario
+        localStorage.setItem('role', userData.role); // Almacena el rol del usuario
+
+          this.$router.push({ name: 'dashboard' });
+        } else {
+          // Mostrar un mensaje de error si no se pudo iniciar sesión
+          document.getElementById('alert').innerHTML = '<div class="alert alert-danger">Usuario o contraseña incorrectos</div>';
+        }
+      } catch (error) {
+        console.error(error);
+        document.getElementById('alert').innerHTML = '<div class="alert alert-danger">Error en el servidor. Inténtelo más tarde.</div>';
       }
-    `
-  })
-  .then(response => {
-    this,user = response.data.data.user;
-  })
-  .catch(error => {
-    console.error(error);
-    return '';
-  });
-},
+    },
   },
 };
 </script>
-
 
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Calibri:400,300,700);
 
 body {
-
     font-family: 'Calibri', sans-serif !important;
     font-size: 14px;
 }
-a{
+a {
     text-decoration: none;
 }
 .card {
@@ -138,8 +140,6 @@ a{
     .card {
         width: 90% !important;
     }
-
-
 }
 
 .upper {
@@ -169,15 +169,13 @@ input {
     min-width: unset;
     background: rgba(151, 151, 151, 0.212) !important;
 }
-.eye{
+.eye {
     background: rgba(151, 151, 151, 0.212) !important;
     padding: 1rem;
-
 }
-.row>*{
+.row>* {
     padding-right: 0 !important;
     padding-left: 0 !important;
-   
 }
 .form-element {
     margin: 3vh 0;
@@ -227,7 +225,6 @@ hr {
 
 .btn {
     width: 50%;
-
     color: white;
     padding: 1.5vh 0;
 }
@@ -254,18 +251,15 @@ input:focus:-moz-placeholder {
     color: transparent;
 }
 
-/* FF 4-18 */
 input:focus::-moz-placeholder {
     color: transparent;
 }
 
-/* FF 19+ */
 input:focus:-ms-input-placeholder {
     color: transparent;
 }
 
-input{
+input {
     border: none;
 }
-/* IE 10+ */
 </style>

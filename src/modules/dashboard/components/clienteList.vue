@@ -9,16 +9,17 @@
       <thead>
         <tr>
           <th scope="col">Id</th>
-          <th scope="col">Fecha</th>
-          <th scope="col">Total</th>
-          <th scope="col">Opciones</th>
+          <th scope="col">E-mail</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Telefono</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="cliente in clientes" :key="cliente.id">
+        <tr v-for="cliente in paginatedClientes" :key="cliente.id">
           <th scope="row">{{ cliente.id }}</th>
-          <td>{{ cliente.fecha }}</td>
-          <td>{{ cliente.total }}</td>
+          <td>{{ cliente.email }}</td>
+          <td>{{ cliente.name }}</td>
+          <td>{{ cliente.phone }}</td>
           <td>
             <div class="row">
               <div class="col-sm-2" @click="$emit('edit', cliente)">
@@ -43,15 +44,85 @@
         </tr>
       </tbody>
     </table>
+    <div class="card">
+      <div class="card-body">
+        <nav>
+          <ul class="pagination flex-wrap d-flex justify-content-center">
+            <li class="page-item">
+              <button class="page-link" @click="currentPage--" :disabled="currentPage === 1" data-abc="true"><i class="fa fa-angle-left"></i> Anterior</button>
+            </li>
+            <li class="page-item" v-for="pageNumber in visiblePageNumbers" :key="pageNumber">
+              <button class="page-link" @click="currentPage = pageNumber" :class="{ 'active': pageNumber === currentPage }">{{ pageNumber }}</button>
+            </li>
+            <li class="page-item">
+              <button class="page-link" @click="currentPage++" :disabled="currentPage === totalPages" data-abc="true">Siguiente <i class="fa fa-angle-right"></i></button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import $ from 'jquery';
+import 'bootstrap'; // Asegúrate de importar bootstrap.js si no lo has hecho ya
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-datepicker';
+import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css';
+
 export default {
   name: 'clienteList',
   props: {
     clientes: Array
+  },
+   data() {
+    return {
+      currentPage: 1,
+      pageSize: 10,
+      searchDate: ''
+    };
+  },
+ methods: {
+  filteredClientes() {
+      if (!this.searchDate) return this.clientes;
+      const searchDate = new Date(this.searchDate);
+      return this.clientes.filter(cliente => {
+        const clienteDate = new Date(cliente.date);
+        return clienteDate.toDateString() === searchDate.toDateString();
+      });
+    },
+},
+computed: {
+   paginatedClientes() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.filteredClientes().slice(startIndex, endIndex);
+    },
+    totalPages() {
+      return Math.ceil(this.filteredClientes().length / this.pageSize);
+    },
+    visiblePageNumbers() {
+      const numberOfPages = Math.min(5, this.totalPages);
+      const middlePage = Math.ceil(numberOfPages / 2);
+      const startPage = Math.max(1, this.currentPage - middlePage + 1);
+      const endPage = Math.min(this.totalPages, startPage + numberOfPages - 1);
+      return Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
+    }
+},
+  mounted() { 
+
+  const $datepicker7 = $(this.$refs.datetimepicker7).datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+  });
+
+  // Configurar el mínimo y máximo valor del primer datepicker
+  $datepicker7.on('changeDate', (e) => {
+    $datepicker6.datepicker('setEndDate', e.date);
+  });
   }
-};
+}
 </script>

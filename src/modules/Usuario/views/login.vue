@@ -27,7 +27,9 @@ export default {
     methods: {
     handleLogin(form) {
         console.log('Login', form);
-      
+        localStorage.setItem('username', username); // Almacena el nombre de usuario
+        localStorage.setItem('role', role); // Almacena el rol del usuario
+
         this.$router.push({ name: 'dashboard' });
     },
  

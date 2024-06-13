@@ -1,9 +1,9 @@
 <template>
   <div  id="CompraList">
     <h4><strong>Compras</strong></h4>
-    <!-- <div class="col-sm-4">
+    <div class="col-sm-4">
         <button type="button" class="btn btn-info mb-3" @click="$emit('create')">Crear Compra</button>
-    </div> -->
+    </div>
     <div class="col">
     <table class="table">
       <thead>

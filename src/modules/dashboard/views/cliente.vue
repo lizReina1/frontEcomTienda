@@ -8,7 +8,7 @@
 <script>
 import clienteForm from '../components/clienteForm.vue';
 import clienteList from '../components/clienteList.vue';
-
+import axios from "axios";
 export default {
   name: 'cliente',
   components: {
@@ -17,9 +17,7 @@ export default {
   },
   data() {
     return {
-      clientes: [
-        { id: 1, fecha: '2024-05-14', total: 15 }
-      ],
+      clientes: [],
       isFormVisible: false,
       isEditing: false,
       selectedcliente: null
@@ -54,7 +52,34 @@ export default {
     },
      cancelarOperacion() {
       this.isFormVisible = false;
+    },
+    sortCliente() {
+      this.clientes.sort((a, b) => new Date(b.date) - new Date(a.date));
+    },
+
+  },
+ async mounted() {
+    try {
+      var result = await axios({
+        method: "POST",
+        url: "http://18.218.15.90:8080/graphql",
+        data: {
+          query: `{
+          customers {
+            email
+            id
+            name
+            phone
+          }
+          }
+          `
+        }
+      });
+      this.clientes = result.data.data.customers;
+      this.sortCliente();  // Sort ventas after fetching
+    } catch (error) {
+      console.error(error);
     }
-  }
+  },
 };
 </script>

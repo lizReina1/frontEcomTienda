@@ -5,83 +5,66 @@
                     <div class="row" >
                     <div class="h4 text-white mt-4 text-center" style="margin-bottom: 50px;" >LuxeStore</div>
                     </div>
-                    <ul>
-                        <li :class="{ 'active': activeTab === 'Dashboard' }">
-                            <a href="#" class="text-decoration-none d-flex align-items-start"  @click="activateTab('Dashboard')">
-                                <div class="fas fa-box pt-2 me-3"></div>
-                                <div class="d-flex flex-column">
-                                    <div class="link"> 
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-speedometer" viewBox="0 0 16 16">
-                                        <path d="M8 2a.5.5 0 0 1 .5.5V4a.5.5 0 0 1-1 0V2.5A.5.5 0 0 1 8 2M3.732 3.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 8a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 0-.527-.02L7.547 7.31A.91.91 0 1 0 8.85 8.569l3.434-4.297a.39.39 0 0 0-.029-.518z"/>
-                                        <path fill-rule="evenodd" d="M6.664 15.889A8 8 0 1 1 9.336.11a8 8 0 0 1-2.672 15.78zm-4.665-4.283A11.95 11.95 0 0 1 8 10c2.186 0 4.236.585 6.001 1.606a7 7 0 1 0-12.002 0"/>
-                                    </svg>   Dashboard</div>
-                                </div>
-                            </a>
-                        </li>
-                        <li :class="{ 'active': activeTab === 'Ventas' }">
-                            <a href="#" class="text-decoration-none d-flex align-items-start"  @click="activateTab('Ventas')">
-                                <div class="fas fa-box-open pt-2 me-3"></div>
-
-                                <div class="d-flex flex-column">
-                                    <div class="link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shop" viewBox="0 0 16 16">
-                                        <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
-                                    </svg>  Ventas</div>
-                                </div>
-                            </a>
-                        </li>
-                        <li :class="{ 'active': activeTab === 'Compras' }">
-                            <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Compras')">
-                                <div class="far fa-address-book pt-2 me-3"></div>
-                                <div class="d-flex flex-column">
-                                    <div class="link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-fill" viewBox="0 0 16 16">
-                                        <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4z"/>
-                                    </svg> Compras</div>
-                                </div>
-                            </a>
-                        </li>
-                        <li :class="{ 'active': activeTab === 'Productos' }">
-                            <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Productos')">
-                                <div class="far fa-user pt-2 me-3"></div>
-                                <div class="d-flex flex-column">
-                                    <div class="link"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="currentColor" viewBox="0 0 24 24" >
-                                        <path d="M3 7L6 4H9C9 4.39397 9.0776 4.78407 9.22836 5.14805C9.37913 5.51203 9.6001 5.84274 9.87868 6.12132C10.1573 6.3999 10.488 6.62087 10.8519 6.77164C11.2159 6.9224 11.606 7 12 7C12.394 7 12.7841 6.9224 13.1481 6.77164C13.512 6.62087 13.8427 6.3999 14.1213 6.12132C14.3999 5.84274 14.6209 5.51203 14.7716 5.14805C14.9224 4.78407 15 4.39397 15 4H18L21 7L20.5 12L18 10.5V20H6V10.5L3.5 12L3 7Z" stroke="#000000" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"/>
-                                    </svg> Productos</div>
-                                </div>
-                            </a>
-                        </li>
-                        <li :class="{ 'active': activeTab === 'Usuarios' }">
-                            <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Usuarios')">
-                                <div class="fas fa-headset pt-2 me-3"></div>
-                                <div class="d-flex flex-column">
-                                    <div class="link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-                                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-                                    </svg> Usuarios</div>
-                                </div>
-                            </a>
-                        </li>
-                        <li :class="{ 'active': activeTab === 'Proveedor' }">
-                            <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Proveedor')">
-                                <div class="fas fa-headset pt-2 me-3"></div>
-                                <div class="d-flex flex-column">
-                                    <div class="link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-                                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-                                    </svg> Proveedor</div>
-                                </div>
-                            </a>
-                        </li>
-                        <li :class="{ 'active': activeTab === 'Cliente' }">
-                            <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Cliente')">
-                                <div class="fas fa-headset pt-2 me-3"></div>
-                                <div class="d-flex flex-column">
-                                    <div class="link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-                                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-                                    </svg> Clientes</div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="row"  style="margin-top: 220px;">
-                        <button class="btn btn-light"> Salir </button>
+                     <ul>
+                    <li v-if="showDashboardLink" :class="{ 'active': activeTab === 'Dashboard' }">
+                        <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Dashboard')">
+                            <div class="fas fa-box pt-2 me-3"></div>
+                            <div class="d-flex flex-column">
+                                <div class="link">Dashboard</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li v-if="showVentasLink" :class="{ 'active': activeTab === 'Ventas' }">
+                        <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Ventas')">
+                            <div class="fas fa-box-open pt-2 me-3"></div>
+                            <div class="d-flex flex-column">
+                                <div class="link">Ventas</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li v-if="showComprasLink" :class="{ 'active': activeTab === 'Compras' }">
+                        <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Compras')">
+                            <div class="far fa-address-book pt-2 me-3"></div>
+                            <div class="d-flex flex-column">
+                                <div class="link">Compras</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li v-if="showProductosLink" :class="{ 'active': activeTab === 'Productos' }">
+                        <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Productos')">
+                            <div class="far fa-user pt-2 me-3"></div>
+                            <div class="d-flex flex-column">
+                                <div class="link">Productos</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li v-if="showUsuariosLink" :class="{ 'active': activeTab === 'Usuarios' }">
+                        <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Usuarios')">
+                            <div class="fas fa-headset pt-2 me-3"></div>
+                            <div class="d-flex flex-column">
+                                <div class="link">Usuarios</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li v-if="showProveedorLink" :class="{ 'active': activeTab === 'Proveedor' }">
+                        <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Proveedor')">
+                            <div class="fas fa-headset pt-2 me-3"></div>
+                            <div class="d-flex flex-column">
+                                <div class="link">Proveedor</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li v-if="showClienteLink" :class="{ 'active': activeTab === 'Cliente' }">
+                        <a href="#" class="text-decoration-none d-flex align-items-start" @click="activateTab('Cliente')">
+                            <div class="fas fa-headset pt-2 me-3"></div>
+                            <div class="d-flex flex-column">
+                                <div class="link">Clientes</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                    <div class="row"  style="margin-top: 190px;">
+                        <button class="btn btn-light" @click="logout"> Salir </button>
                     </div>
                     
                 </div>
@@ -98,7 +81,7 @@
             <div class="collapse navbar-collapse" id="mynav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="#"> <span class="fas fa-user pe-2"></span> Hello Jhon</a>
+                        <a class="nav-link" href="#"> <span class="fas fa-user pe-2">{{username}}</span></a>
                     </li>
                 </ul>
             </div>
@@ -147,14 +130,51 @@ export default {
 
 data() {
     return {
-      activeTab: null // Variable para almacenar la pestaña activa
+      activeTab: null,
+      username:'',
+      userRole: ''
     };
 },
+created() {
+    this.username = localStorage.getItem('username');
+    this.userRole = localStorage.getItem('role'); // Obtén el rol del usuario al montar el componente
+  },
 methods: {
     activateTab(tab) {
-      this.activeTab = tab; // Método para activar la pestaña haciendo clic en ella
-    }
+      this.activeTab = tab; 
+      console.log( this.userRole);// Método para activar la pestaña haciendo clic en ella
+    },
+    
+  logout() {
+      localStorage.removeItem('username'); // Elimina el nombre de usuario
+      localStorage.removeItem('role'); 
+      this.$router.push({ name: 'home' });
 }
+},
+ computed: {
+        // Propiedades computadas para mostrar los elementos del menú según el rol del usuario
+        showDashboardLink() {
+            return this.userRole === 'Administrador';
+        },
+        showVentasLink() {
+            return this.userRole === 'Cajero' || this.userRole === 'Administrador';
+        },
+        showComprasLink() {
+            return this.userRole === 'Supervisor' || this.userRole === 'Administrador';
+        },
+        showProductosLink() {
+            return this.userRole === 'Cajero' || this.userRole === 'Supervisor' || this.userRole === 'Administrador';
+        },
+        showUsuariosLink() {
+            return this.userRole === 'Administrador';
+        },
+        showProveedorLink() {
+            return this.userRole === 'Supervisor' || this.userRole === 'Administrador';
+        },
+        showClienteLink() {
+            return this.userRole === 'Cajero' || this.userRole === 'Administrador';
+        },
+    },
 }
 </script>
 <style>
