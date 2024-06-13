@@ -28,7 +28,9 @@
             <div class="row">
               <div class="col-sm-4">
                 <label for="producto">Producto</label>
-                <input type="text" v-model="nuevoProducto.nombre" class="form-control" id="producto" />
+                <select v-model="nuevoProducto.id" class="form-control" id="producto">
+                  <option v-for="producto in productos" :key="producto.id" :value="producto.id">{{ producto.name }}</option>
+                </select>
               </div>
               <div class="col-sm-4">
                 <label for="cantidad">Cantidad</label>
@@ -39,7 +41,7 @@
               </div>
             </div>
             <div class="row">
-               <b-table striped hover :items="items" :fields="fields">
+              <b-table striped hover :items="items" :fields="fields">
                 <template #cell(actions)="row">
                     <svg @click="eliminarProducto(row.index)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -72,6 +74,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'CompraForm',
   props: {
@@ -87,12 +91,11 @@ export default {
   data() {
     return {
       nuevoProducto: {
-        nombre: '',
+        id: '',
         cantidad: 1
       },
-      items: [
-        { Producto: 'luz', Precio: '10', Cantidad: '2', Total: '20' }
-      ],
+      productos: [],
+      items: [],
       fields: [
         { key: 'Producto', label: 'Producto' },
         { key: 'Precio', label: 'Precio' },
@@ -101,31 +104,100 @@ export default {
         { key: 'actions', label: 'Acciones' }
       ]
     };
+  },  
+  created() {
+    this.fetchProductos();
   },
   methods: {
-    handleSubmit() {
-      this.$emit('submit', { ...this.compra });
+    fetchProductos() {
+      axios.post('http://18.218.15.90:8080/graphql', {
+        query: `
+          {
+            products {
+              id
+              name
+            }
+          }
+        `
+      })
+      .then(response => {
+        this.productos = response.data.data.products;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    },
+     async handleSubmit() {
+      const detalles = this.items.map(item => ({
+        product_id: this.productos.find(producto => producto.name === item.Producto).id,
+        quantity: item.Cantidad,
+        price: item.Precio,
+        total: item.Total
+      }));
+
+      const compraData = {
+        date: this.compra.fecha,
+        total: parseFloat(this.compra.total), // Asegúrate de que el total sea un número
+        supplier_id: 1, // Ajusta este valor según tu lógica
+        details: detalles,
+      };
+
+      console.log('compraData', compraData);
+
+      axios.post('http://18.218.15.90:8080/graphql', {
+        query: `
+          mutation {
+            createPurchase(input: {
+              date: "${compraData.date}"
+              total: ${compraData.total}
+              supplier_id: 1
+              details: ${JSON.stringify(compraData.details).replace(/"([^"]+)":/g, '$1:')}
+            }) {
+              id
+              total
+              date
+            }
+          }
+        `
+      })
+      .then(response => {
+        console.log(response.data);
+        this.$emit('submit', { ...this.compra });
+      })
+      .catch(error => {
+        console.error('Error al agregar la compra:', error);
+      });
     },
     cancelarOperacion() {
-      this.$emit('cancelar'); // Emitir evento cancelar
+      this.$emit('cancelar');
     },
     agregarProducto() {
-      if (this.nuevoProducto.nombre && this.nuevoProducto.cantidad > 0) {
-        const precio = 10; // Suponiendo un precio fijo para simplificar
+      const productoSeleccionado = this.productos.find(producto => producto.id === this.nuevoProducto.id);
+      if (productoSeleccionado && this.nuevoProducto.cantidad > 0) {
+        const precio = 10;
         const total = this.nuevoProducto.cantidad * precio;
         this.items.push({ 
-          Producto: this.nuevoProducto.nombre, 
+          Producto: productoSeleccionado.name, 
           Precio: precio, 
           Cantidad: this.nuevoProducto.cantidad, 
-          Total: total,
-          Accion: ''
+          Total: total 
         });
-        this.nuevoProducto.nombre = '';
+        this.calcularTotal();
+        this.nuevoProducto.id = '';
         this.nuevoProducto.cantidad = 1;
       }
     },
     eliminarProducto(index) {
       this.items.splice(index, 1);
+      this.calcularTotal();
+    },
+    calcularTotal() {
+      const total = this.items.reduce((acc, item) => acc + item.Total, 0);
+      this.compra.total = total;
+    },
+    resetCompraData() {
+      this.compra = { cliente: '', fecha: '', nombreproveedor: '', productos: [], total: 0 };
+      this.items = [];
     }
   }
 };

@@ -4,14 +4,14 @@
       <div class="container d-flex align-items-center justify-content-between">
 
         <div class="logo">
-          <h1 class="text-light"><a href="index.html">Command Center</a></h1>
+          <h1 class="text-light"><a href="index.html">LuxeStore</a></h1>
           <!-- Uncomment below if you prefer to use an image logo -->
           <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
         </div>
 
         <nav id="navbar" class="navbar">
           <ul>
-            <li><a class="active" href="index.html">Home</a></li>
+            <!-- <li><a class="active" href="index.html">Home</a></li>
             <li class="dropdown"><a href="#"><span>About</span> <i class="bi bi-chevron-down"></i></a>
               <ul>
                 <li><a href="about.html">About</a></li>
@@ -29,7 +29,7 @@
             </li>
             <li><a href="pricing.html">Pricing</a></li>
             <li><a href="contact.html">Contact</a></li>
-
+ -->
             <li ><a class="getIniciarSesion" @click="insertRuta('/login')">Iniciar Sesion</a></li>
             <li>
               <a class="getstarted"  @click="insertRuta('/register')">Registrar</a>

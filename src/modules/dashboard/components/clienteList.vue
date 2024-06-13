@@ -1,9 +1,9 @@
 <template>
   <div  id="clienteList">
     <h4><strong>clientes</strong></h4>
-    <div class="col-sm-2">
+    <!-- <div class="col-sm-2">
         <button type="button" class="btn btn-info mb-3" @click="$emit('create')">Crear</button>
-    </div>
+    </div> -->
     <div class="col">
     <table class="table">
       <thead>
