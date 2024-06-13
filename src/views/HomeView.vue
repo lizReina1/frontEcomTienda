@@ -57,7 +57,7 @@
             <div class="col-sm-4" v-for="producto in productos" :key="producto.id">
               <div class="card">
           <img :src="producto.image" class="card-img-top img-fluid rounded mx-auto d-block" :alt="producto.name" style="max-width: 200px;">
- <div class="card-body">
+                <div class="card-body">
                   <h5 class="card-title"><b>{{ producto.name }}</b></h5>
                   <p class="card-text">{{ producto.description }}</p>
                   <p class="card-text">Precio: ${{ producto.price }}</p>
