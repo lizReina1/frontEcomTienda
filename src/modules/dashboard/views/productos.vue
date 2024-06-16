@@ -1,26 +1,32 @@
 <template>
   <div>
-    <producto-form v-if="isFormVisible" :producto="selectedProducto" :isEditing="isEditing" @submit="handleFormSubmit" @cancelar="cancelarOperacion"/>
-    <producto-list v-else :productos="productos" @create="handleCreate" @edit="handleEdit" @view="handleView" @delete="handleDelete" />
+    <producto-form v-if="isFormVisible" :producto="selectedProducto" :isEditing="isEditing" @submit="handleFormSubmit"
+      @cancelar="cancelarOperacion" />
+    <producto-list v-if="!isFormVisible && !isDetailVisible" :productos="productos" @create="handleCreate"
+      @edit="handleEdit" @view="handleView" @delete="handleDelete" />
+    <producto-detail v-if="isDetailVisible" :producto="selectedProducto" @cancelar="cancelarOperacion" />
   </div>
 </template>
 
 <script>
 import ProductoForm from '../components/ProductoForm.vue';
 import ProductoList from '../components/ProductoList.vue';
+import ProductoDetail from '../components/ProductoDetail.vue';
 import axios from "axios";
 export default {
   name: 'producto',
   components: {
     ProductoForm,
-    ProductoList
+    ProductoList,
+    ProductoDetail
   },
   data() {
     return {
       productos: [],
       isFormVisible: false,
       isEditing: false,
-      selectedProducto: null
+      selectedProducto: null,
+      isDetailVisible: false
     };
   },
   methods: {
@@ -33,13 +39,17 @@ export default {
       this.selectedProducto = { ...producto };
       this.isEditing = true;
       this.isFormVisible = true;
+      this.isDetailVisible = false;
     },
     handleView(producto) {
-      // Aquí podrías implementar la lógica para ver los detalles de la producto.
-      alert(`Detalles de la producto: \nFecha: ${producto.fecha}\nTotal: ${producto.total}`);
+      this.selectedProducto = { ...producto };
+      this.isDetailVisible = true;
+      this.isFormVisible = false;
+      this.isEditing = false;
     },
     handleDelete(id) {
       this.productos = this.productos.filter(producto => producto.id !== id);
+      this.isDetailVisible = false;
     },
     handleFormSubmit(producto) {
       if (this.isEditing) {
@@ -49,23 +59,25 @@ export default {
         this.productos.push(producto);
       }
       this.isFormVisible = false;
-       this.sortProductos(); 
+      this.isDetailVisible = false;
+      this.sortProductos();
     },
-     cancelarOperacion() {
+    cancelarOperacion() {
       this.isFormVisible = false;
+      this.isDetailVisible = false;
     },
-     sortProductos() {
+    sortProductos() {
       this.productos.sort((a, b) => new Date(b.date) - new Date(a.date));
     }
   },
-    async mounted() {
+  async mounted() {
     try {
       var result = await axios({
         method: "POST",
         url: "http://18.218.15.90:8080/graphql",
         data: {
           query: `
-         {
+        {
           products {
             brand_id
             code
@@ -84,10 +96,10 @@ export default {
         }
       });
       this.productos = result.data.data.products;
-      this.sortProductos();  
+      this.sortProductos();
     } catch (error) {
       console.error(error);
     }
-  }
+  },
 };
 </script>
