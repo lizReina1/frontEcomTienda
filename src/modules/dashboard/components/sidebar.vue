@@ -20,6 +20,13 @@
                                 <span class="link">Ventas</span>
                             </a>
                         </li>
+                        <li v-if="showDevolucionesLink" :class="{ 'active': activeTab === 'Devoluciones' }">
+                            <a href="#" @click="activateTab('Devoluciones')"
+                                class="text-decoration-none d-flex align-items-center">
+                                <i class="fas fa-box-open pt-1 me-3"></i>
+                                <span class="link">Devoluciones</span>
+                            </a>
+                        </li>
                         <li v-if="showComprasLink" :class="{ 'active': activeTab === 'Compras' }">
                             <a href="#" @click="activateTab('Compras')"
                                 class="text-decoration-none d-flex align-items-center">
@@ -89,6 +96,7 @@
 
                         <div v-else>
                             <venta v-if="activeTab === 'Ventas'" />
+                            <devoluciones v-if="activeTab === 'Devoluciones'" />
                             <compra v-if="activeTab === 'Compras'" />
                             <productos v-if="activeTab === 'Productos'" />
                             <usuarios v-if="activeTab === 'Usuarios'" />
@@ -109,9 +117,10 @@ import productos from '../views/productos.vue';
 import usuarios from '../views/usuarios.vue';
 import proveedor from '../views/proveedores.vue';
 import cliente from '../views/cliente.vue';
+import devoluciones from '../views/devoluciones.vue';
 
 export default {
-    components: { venta, compra, productos, usuarios, proveedor, cliente },
+    components: { venta, compra, productos, usuarios, proveedor, cliente, devoluciones },
 
     data() {
         return {
@@ -143,6 +152,9 @@ export default {
             return this.userRole === 'Administrador';
         },
         showVentasLink() {
+            return this.userRole === 'Cajero' || this.userRole === 'Administrador';
+        },
+        showDevolucionesLink() {
             return this.userRole === 'Cajero' || this.userRole === 'Administrador';
         },
         showComprasLink() {
