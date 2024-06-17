@@ -36,7 +36,7 @@ export default {
     },
     handleView(producto) {
       // Aquí podrías implementar la lógica para ver los detalles de la producto.
-      alert(`Detalles de la producto: \nFecha: ${producto.fecha}\nTotal: ${producto.total}`);
+      alert(`Detalles del producto: \nFecha: ${producto.fecha}\nTotal: ${producto.total}`);
     },
     handleDelete(id) {
       this.productos = this.productos.filter(producto => producto.id !== id);

@@ -1,29 +1,37 @@
 <template>
   <div>
-    <usuario-list :usuarios="usuarios" @create="handleCreate" @edit="handleEdit" @view="handleView" @delete="handleDelete" />
-  </div>
+    <usuario-form v-if="isFormVisible" :usuario="selectedUsuario" :isEditing="isEditing" @submit="handleFormSubmit" @cancelar="cancelarOperacion" />
+    <usuario-list v-else :usuarios="usuarios" @create="handleCreate" @edit="handleEdit" @view="handleView" @delete="handleDelete" />
+
+</div>
 </template>
 
 <script>
 import UsuarioList from '../components/UsuariosList.vue';
-import axios from "axios";
+import UsuarioForm from '../components/UsuariosForm.vue';
+import axios from 'axios';
 
 export default {
   name: 'Usuario',
   components: {
-    UsuarioList
+    UsuarioList,
+    UsuarioForm
   },
   data() {
     return {
       usuarios: [],
       isFormVisible: false,
       isEditing: false,
-      selectedUsuario: null
+      selectedUsuario: null,
+      showPassword: false
     };
   },
   methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
     handleCreate() {
-      this.selectedUsuario = { fecha: '', total: 0 };
+      this.selectedUsuario = { username: '', email: '', role: '', password: '' };
       this.isEditing = false;
       this.isFormVisible = true;
     },
@@ -33,8 +41,8 @@ export default {
       this.isFormVisible = true;
     },
     handleView(usuario) {
-      // Aquí podrías implementar la lógica para ver los detalles de la usuario.
-      alert(`Detalles de la usuario: \nFecha: ${usuario.fecha}\nTotal: ${usuario.total}`);
+      // Aquí podrías implementar la lógica para ver los detalles del usuario.
+      alert(`Detalles del usuario: \nUsername: ${usuario.username}\nEmail: ${usuario.email}`);
     },
     handleDelete(id) {
       this.usuarios = this.usuarios.filter(usuario => usuario.id !== id);
@@ -48,39 +56,33 @@ export default {
       }
       this.isFormVisible = false;
     },
-     cancelarOperacion() {
+    cancelarOperacion() {
       this.isFormVisible = false;
-    }, sortUsuarios() {
-      this.usuarios.sort((a, b) => new Date(b.date) - new Date(a.date));
     },
-
+    sortUsuarios() {
+      this.usuarios.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
   },
- async mounted() {
+  async mounted() {
     try {
-      var result = await axios({
-        method: "POST",
-        url: "http://18.218.15.90:8080/graphql",
-        data: {
-          query: `
+      const result = await axios.post('http://18.218.15.90:8080/graphql', {
+        query: `
           {
             users {
-              email
               id
-              password
-              role
               username
+              email
+              role
+              password
             }
           }
-          `
-        }
+        `
       });
       this.usuarios = result.data.data.users;
-      this.sortUsuarios();  // Sort ventas after fetching
+      this.sortUsuarios();
     } catch (error) {
       console.error(error);
     }
-  },
-  
-  
+  }
 };
 </script>
