@@ -10,7 +10,7 @@
         <tr>
           <th scope="col">Id</th>
           <th scope="col">Fecha</th>
-          <th scope="col">Total</th>
+          <th scope="col">Cantidad</th>
           <th scope="col">Nombre Proveedor</th>
           <th scope="col">Opciones</th>
         </tr>
