@@ -8,8 +8,10 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { IconsPlugin } from 'bootstrap-vue';
 
 Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 
 /* router.beforeEach((to, from, next) => {
   if (to.path === '/') {

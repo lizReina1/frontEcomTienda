@@ -93,7 +93,7 @@ export default {
         }
       });
       this.compras = result.data.data.purchases;
-      this.sortCompras();  // Ordenar compras después de obtenerlas
+      this.sortCompras();  // Sort ventas after fetching
     } catch (error) {
       console.error(error);
     }

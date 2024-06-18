@@ -80,7 +80,6 @@ export default {
         }
       });
       this.ventas = result.data.data.sales;
-      this.sortVentas();  // Sort ventas after fetching
     } catch (error) {
       console.error(error);
     }
