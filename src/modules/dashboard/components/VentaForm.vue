@@ -35,7 +35,8 @@
               <div class="col-sm-4">
                 <label for="producto">Producto</label>
                 <select v-model="nuevoProducto.id" class="form-control" id="producto">
-                  <option v-for="producto in productos" :key="producto.id" :value="producto.id">{{ producto.name }}</option>
+                  <option v-for="producto in productos" :key="producto.id" :value="producto.id">{{ producto.name }}
+                  </option>
                 </select>
               </div>
               <div class="col-sm-4">
@@ -47,7 +48,7 @@
               </div>
             </div>
             <div class="row">
-               <b-table striped hover :items="items" :fields="fields">
+              <b-table striped hover :items="items" :fields="fields">
                 <!-- <template #cell(actions)="row">
                     <svg @click="eliminarProducto(row.index)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -132,12 +133,12 @@ export default {
           }
         `
       })
-      .then(response => {
-        this.productos = response.data.data.products;
-      })
-      .catch(error => {
-        console.error(error);
-      });
+        .then(response => {
+          this.productos = response.data.data.products;
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     fetchClientes() {
       axios.post('http://18.218.15.90:8080/graphql', {
@@ -150,16 +151,17 @@ export default {
           }
         `
       })
-      .then(response => {
-        this.clientes = response.data.data.customers;
-      })
-      .catch(error => {
-        console.error(error);
-      });
+        .then(response => {
+          this.clientes = response.data.data.customers;
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
-   fetchProductoId(id) {
-  return axios.post('http://18.218.15.90:8080/graphql', {
-    query: `
+    async fetchProductoId(id) {
+      try {
+        const response = await axios.post('http://18.218.15.90:8080/graphql', {
+          query: `
       {
         product(id: "${id}") {
             brand_id
@@ -176,20 +178,18 @@ export default {
         }
       }
     `
-  })
-  .then(response => {
-    const prod = response.data.data.product;
-    return prod.name; // Devolver el nombre del producto
-  })
-  .catch(error => {
-    console.error(error);
-    return ''; // O cualquier valor predeterminado en caso de error
-  });
-},
+        });
+        const prod = response.data.data.product;
+        return prod.name;
+      } catch (error) {
+        console.error(error);
+        return '';
+      }
+    },
 
-   fetchVentaDetails(id) {
-  axios.post('http://18.218.15.90:8080/graphql', {
-    query: `
+    fetchVentaDetails(id) {
+      axios.post('http://18.218.15.90:8080/graphql', {
+        query: `
       {
         sale(id: "${id}") {
           id
@@ -209,33 +209,33 @@ export default {
         }
       }
     `
-  })
-  .then(response => {
-    const sale = response.data.data.sale;
-    console.log('edit', sale);
-    this.venta.date = sale.date;
-    this.venta.metodopago = sale.payment_type;
-    this.venta.cliente = sale.customer_id;
-    this.venta.total = sale.total;
-
-    // Poblar la tabla con los detalles de la venta
-    Promise.all(sale.details.map(detail => this.fetchProductoId(detail.product_id)))
-      .then(productos => {
-        this.items = sale.details.map((detail, index) => ({
-          Producto: productos[index],
-          Precio: detail.price,
-          Cantidad: detail.quantity,
-          Total: detail.total
-        }));
       })
-      .catch(error => {
-        console.error(error);
-      });
-  })
-  .catch(error => {
-    console.error(error);
-  });
-},
+        .then(response => {
+          const sale = response.data.data.sale;
+          console.log('edit', sale);
+          this.venta.date = sale.date;
+          this.venta.metodopago = sale.payment_type;
+          this.venta.cliente = sale.customer_id;
+          this.venta.total = sale.total;
+
+          // Poblar la tabla con los detalles de la venta
+          Promise.all(sale.details.map(detail => this.fetchProductoId(detail.product_id)))
+            .then(productos => {
+              this.items = sale.details.map((detail, index) => ({
+                Producto: productos[index],
+                Precio: detail.price,
+                Cantidad: detail.quantity,
+                Total: detail.total
+              }));
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
     handleSubmit() {
       const detalles = this.items.map(item => ({
         product_id: this.productos.find(producto => producto.name === item.Producto).id,
@@ -271,13 +271,13 @@ export default {
           }
         `
       })
-      .then(response => {
-        console.log(response.data);
-        this.$emit('submit', { ...this.venta });
-      })
-      .catch(error => {
-        console.error(error);
-      });
+        .then(response => {
+          console.log(response.data);
+          this.$emit('submit', { ...this.venta });
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     cancelarOperacion() {
       this.$emit('cancelar'); // Emitir evento cancelar
@@ -287,10 +287,10 @@ export default {
       if (productoSeleccionado && this.nuevoProducto.cantidad > 0) {
         const precio = 10; // Suponiendo un precio fijo para simplificar
         const total = this.nuevoProducto.cantidad * precio;
-        this.items.push({ 
-          Producto: productoSeleccionado.name, 
-          Precio: precio, 
-          Cantidad: this.nuevoProducto.cantidad, 
+        this.items.push({
+          Producto: productoSeleccionado.name,
+          Precio: precio,
+          Cantidad: this.nuevoProducto.cantidad,
           Total: total
         });
         this.calcularTotal();
@@ -298,22 +298,22 @@ export default {
         this.nuevoProducto.cantidad = 1;
       }
     },
-  eliminarProducto(index) {
-  const deletedDetailId = this.items[index].IdDetalle; // Obtener el ID del detalle que se va a eliminar
-  this.items.splice(index, 1); // Eliminar el detalle de la tabla
+    eliminarProducto(index) {
+      const deletedDetailId = this.items[index].IdDetalle; // Obtener el ID del detalle que se va a eliminar
+      this.items.splice(index, 1); // Eliminar el detalle de la tabla
 
-  // Actualizar la venta eliminando el detalle correspondiente
-  axios.post('http://18.218.15.90:8080/graphql', {
-    query: `
+      // Actualizar la venta eliminando el detalle correspondiente
+      axios.post('http://18.218.15.90:8080/graphql', {
+        query: `
       mutation {
         updateSale(id: "${this.venta.id}", input: {
           date: "${this.venta.date}",
           details: [
             ${this.items.map(item => {
-              if (item.IdDetalle !== deletedDetailId) { // Verificar si el detalle es el que se va a eliminar
-                return `{ product_id: ${this.fetchProductId(item.Producto)}, quantity: ${item.Cantidad}, price: ${item.Precio} }`;
-              }
-            }).filter(Boolean).join(', ')} // Filtrar los detalles que no sean nulos (se excluyen los detalles que se van a eliminar)
+          if (item.IdDetalle !== deletedDetailId) { // Verificar si el detalle es el que se va a eliminar
+            return `{ product_id: ${this.fetchProductId(item.Producto)}, quantity: ${item.Cantidad}, price: ${item.Precio} }`;
+          }
+        }).filter(Boolean).join(', ')} // Filtrar los detalles que no sean nulos (se excluyen los detalles que se van a eliminar)
           ]
         }) {
           date
@@ -323,15 +323,15 @@ export default {
         }
       }
     `
-  })
-  .then(response => {
-    console.log('Venta actualizada:', response.data);
-  })
-  .catch(error => {
-    console.error('Error al actualizar la venta:', error);
-  });
-  this.calcularTotal();
-},
+      })
+        .then(response => {
+          console.log('Venta actualizada:', response.data);
+        })
+        .catch(error => {
+          console.error('Error al actualizar la venta:', error);
+        });
+      this.calcularTotal();
+    },
     calcularTotal() {
       const total = this.items.reduce((acc, item) => acc + item.Total, 0);
       this.venta.total = total;
@@ -344,9 +344,11 @@ export default {
 .container.formventa {
   margin-left: 50px;
 }
+
 .row {
   margin-bottom: 30px;
 }
+
 .bold-label {
   font-weight: bold;
 }

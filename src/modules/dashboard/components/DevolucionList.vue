@@ -5,10 +5,10 @@
             <div class="col-sm-2">
                 <button type="button" class="btn btn-info mb-3" @click="$emit('create')">Crear</button>
             </div>
-            <div class="col-lg-4 mb-3">
+            <!-- <div class="col-lg-4 mb-3">
                 <input id="datetimepicker6" ref="datetimepicker6" class="form-control" type="date" v-model="searchDate"
                     placeholder="Buscar por fecha" />
-            </div>
+            </div> -->
         </div>
 
         <div class="row">
@@ -141,7 +141,6 @@ export default {
                     this.$set(this.customerNames, customer.id, customer.name || 'Nombre no disponible');
                 }
             } catch (error) {
-                console.error(`Error obteniendo el nombre del cliente ${customerId}:`, error);
                 this.$set(this.customerNames, customerId, 'Error al cargar');
             }
         }

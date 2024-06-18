@@ -78,7 +78,6 @@ export default {
         }
       });
       this.refunds = result.data.data.refunds;
-      console.log('refunds', this.refunds)
       this.sortRefunds();  // Sort ventas after fetching
     } catch (error) {
       console.error(error);
