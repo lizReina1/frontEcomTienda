@@ -63,7 +63,7 @@
                   <p class="card-text">Precio: ${{ producto.price }}</p>
                   <p class="card-text">Stock: {{ producto.stock }}</p>
                   <!-- Agrega más detalles del producto si es necesario -->
-                  <a href="/login" class="btn btn-primary">Ver detalles</a>
+                  <a class="btn btn-primary" @click="insertRuta('/login')">Ver detalles</a>
                 </div>
               </div>
             </div>
@@ -120,7 +120,16 @@ export default {
     }
   },
   methods: {
-    // Métodos adicionales si los necesitas
+   insertRuta(ruta) {
+    console.log(`Navigating to ${ruta}`);
+    if (this.$route.path !== ruta) {
+      this.$router.push(ruta).catch(err => {
+        if (err.name !== 'NavigationDuplicated') {
+          throw err;
+        }
+      });
+    }
+  },
   }
 };
 </script>
