@@ -2,10 +2,10 @@
     <div>
         <img :src=urlImg alt="">
         <h3>
-            {{nombre}}
+            {{ nombre }}
         </h3>
         <p>
-            $ {{precio}}
+            $ {{ precio }}
         </p>
     </div>
 </template>
@@ -14,15 +14,13 @@
 export default {
     name: 'Producto',
     components: {},
-    method:{},
-    props:{
-    nombre: String,
-    precio: Number,
-    urlImg: String,
+    method: {},
+    props: {
+        nombre: String,
+        precio: Number,
+        urlImg: String,
     }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

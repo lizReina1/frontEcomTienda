@@ -5,8 +5,10 @@ import store from './store'
 import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import { IconsPlugin } from 'bootstrap-vue';
 
 Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 
 Vue.config.productionTip = false
 /* router.beforeEach((to, from, next) => {

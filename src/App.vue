@@ -1,10 +1,10 @@
 <template>
-<div>
-<main>
- <RouterView />
-</main>
+  <div>
+    <main>
+      <RouterView />
+    </main>
 
-</div>
+  </div>
 </template>
 
 <script>
