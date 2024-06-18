@@ -1,6 +1,6 @@
 <template>
-    <div class="navbar">
-       <header id="header" class="fixed-top d-flex align-items-center">
+  <div class="navbar">
+    <header id="header" class="fixed-top d-flex align-items-center">
       <div class="container d-flex align-items-center justify-content-between">
 
         <div class="logo">
@@ -30,45 +30,44 @@
             <li><a href="pricing.html">Pricing</a></li>
             <li><a href="contact.html">Contact</a></li>
  -->
-            <li ><a class="getIniciarSesion" @click="insertRuta('/login')">Iniciar Sesion</a></li>
+            <li><a class="getIniciarSesion" @click="insertRuta('/login')">Iniciar Sesion</a></li>
             <li>
-              <a class="getstarted"  @click="insertRuta('/register')">Registrar</a>
+              <a class="getstarted" @click="insertRuta('/register')">Registrar</a>
             </li>
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
-    </div>
-  </header>
-    </div>
+      </div>
+    </header>
+  </div>
 </template>
 <script>
 
 export default {
-    name: 'navbar',
-    components: {},
-   data: () => ({
-    rutas: [{nombre: 'Home', ruta: '/'},
-            {nombre: 'about', ruta: '/about'}
-          ]
+  name: 'navbar',
+  components: {},
+  data: () => ({
+    rutas: [{ nombre: 'Home', ruta: '/' },
+    { nombre: 'about', ruta: '/about' }
+    ]
   }),
 
-methods: {
-  insertRuta(ruta) {
-    console.log(`Navigating to ${ruta}`);
-    if (this.$route.path !== ruta) {
-      this.$router.push(ruta).catch(err => {
-        if (err.name !== 'NavigationDuplicated') {
-          throw err;
-        }
-      });
-    }
+  methods: {
+    insertRuta(ruta) {
+      console.log(`Navigating to ${ruta}`);
+      if (this.$route.path !== ruta) {
+        this.$router.push(ruta).catch(err => {
+          if (err.name !== 'NavigationDuplicated') {
+            throw err;
+          }
+        });
+      }
+    },
   },
-},
 }
 </script>
 
 <style scoped>
-
 .navbar {
   padding: 0;
 }
@@ -310,5 +309,4 @@ methods: {
 .navbar-mobile .dropdown>.dropdown-active {
   display: block;
 }
-
 </style>

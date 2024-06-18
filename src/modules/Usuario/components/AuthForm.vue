@@ -97,8 +97,7 @@ export default {
         const userData = response.data.data.loginUser;
         if (userData) {
           // Guardar el token en el localStorage o manejarlo según sea necesario
-          localStorage.setItem('token', userData.token);
-           console.log('Login', this.form);
+        localStorage.setItem('token', userData.token);
         localStorage.setItem('username', userData.username); // Almacena el nombre de usuario
         localStorage.setItem('role', userData.role); // Almacena el rol del usuario
 

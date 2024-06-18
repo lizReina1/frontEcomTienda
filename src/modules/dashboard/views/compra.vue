@@ -85,7 +85,6 @@ export default {
         }
       });
       this.compras = result.data.data.purchases;
-      this.sortCompras();  // Sort ventas after fetching
     } catch (error) {
       console.error(error);
     }
