@@ -21,6 +21,11 @@
           <div class="row justify-content-end">
             <div class="col-lg-11">
               <div class="row justify-content-end">
+                <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
+                  <div class="count-box py-5">
+                      <button type="button" class="btn btn-oferta"  @click="insertRuta('/about')"><i class="bi bi-star-fill" style="color: #ff0000;"></i>OFERTA</button>
+                  </div>
+                </div>
                 <!-- Count Boxes -->
                 <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
                   <div class="count-box py-5">
@@ -63,8 +68,8 @@
                   <p class="card-text">Precio: ${{ producto.price }}</p>
                   <p class="card-text">Stock: {{ producto.stock }}</p>
                   <!-- Agrega más detalles del producto si es necesario -->
-                  <a class="btn btn-primary" @click="insertRuta('/login')">Ver detalles</a>
-                </div>
+<!--                   <a class="btn btn-primary" @click="insertRuta('/login')">Ver detalles</a>
+ -->                </div>
               </div>
             </div>
           </div>
@@ -73,18 +78,19 @@
       </section><!-- End About Section -->
 
     </main><!-- End Main -->
-
   </div><!-- End Home -->
 </template>
 
 <script>
 import axios from 'axios';
 import Navbar from '@/components/navbar.vue';
+import Oferta from '@/components/oferta.vue';
 
 export default {
   name: 'HomeView',
   components: {
-    Navbar
+    Navbar,
+    Oferta,
   },
   data() {
     return {
@@ -144,4 +150,19 @@ export default {
   max-width: 200px; /* Limita la anchura máxima de la imagen a 200px */
   height: 300px; /* Permite que la altura se ajuste automáticamente */
 }
+.btn-oferta {
+            background-color: #ffc107;
+            color: #212529;
+            font-size: 1.5em;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-oferta:hover {
+            background-color: #ff9800;
+            color: #ffffff;
+            transform: scale(1.05);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
 </style>
