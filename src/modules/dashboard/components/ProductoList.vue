@@ -9,7 +9,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">Codigo</th>
+              <th scope="col">Código</th>
               <th scope="col">Nombre</th>
               <th scope="col">Descripción</th>
               <th scope="col">Stock</th>
@@ -76,7 +76,9 @@
         </div>
       </div>
     </div>
+    <!-- Cierre del segundo div class="row" -->
   </div>
+  <!-- Cierre del primer div id="ProductoList" -->
 </template>
 
 <script>
