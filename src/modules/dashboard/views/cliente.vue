@@ -1,42 +1,49 @@
 <template>
   <div>
-    <cliente-form v-if="isFormVisible" :cliente="selectedcliente" :isEditing="isEditing" @submit="handleFormSubmit" @cancelar="cancelarOperacion"/>
-    <cliente-list v-else :clientes="clientes" @create="handleCreate" @edit="handleEdit" @view="handleView" @delete="handleDelete" />
+    <cliente-form v-if="isFormVisible" :cliente="selectedCliente" :isEditing="isEditing" @submit="handleFormSubmit" @cancelar="cancelarOperacion"/>
+    <cliente-list v-else-if="!isDetalleVisible" :clientes="clientes" @create="handleCreate" @edit="handleEdit" @view="handleView" @delete="handleDelete" />
+    <cliente-detalle v-if="isDetalleVisible" :cliente-id="selectedCliente.id" @cancelar="cancelarOperacion" />
   </div>
 </template>
 
 <script>
-import clienteForm from '../components/clienteForm.vue';
-import clienteList from '../components/clienteList.vue';
-import axios from "axios";
+import ClienteForm from '../components/clienteForm.vue';
+import ClienteList from '../components/clienteList.vue';
+import ClienteDetalle from '../components/ClienteDetalle.vue'; // Asegúrate de que este nombre coincide
+import axios from 'axios';
+
 export default {
   name: 'cliente',
   components: {
-    clienteForm,
-    clienteList
+    ClienteForm,
+    ClienteList,
+    ClienteDetalle
   },
   data() {
     return {
       clientes: [],
       isFormVisible: false,
       isEditing: false,
-      selectedcliente: null
+      selectedCliente: null,
+      isDetalleVisible: false
     };
   },
   methods: {
     handleCreate() {
-      this.selectedcliente = { fecha: '', total: 0 };
+      this.selectedCliente = { fecha: '', total: 0 };
       this.isEditing = false;
       this.isFormVisible = true;
     },
     handleEdit(cliente) {
-      this.selectedcliente = { ...cliente };
+      this.selectedCliente = { ...cliente };
       this.isEditing = true;
       this.isFormVisible = true;
     },
     handleView(cliente) {
-      // Aquí podrías implementar la lógica para ver los detalles de la cliente.
-      alert(`Detalles de la cliente: \nFecha: ${cliente.fecha}\nTotal: ${cliente.total}`);
+      this.selectedCliente = { ...cliente };
+      this.isEditing = false;
+      this.isFormVisible = false;
+      this.isDetalleVisible = true;
     },
     handleDelete(id) {
       this.clientes = this.clientes.filter(cliente => cliente.id !== id);
@@ -50,33 +57,31 @@ export default {
       }
       this.isFormVisible = false;
     },
-     cancelarOperacion() {
+    cancelarOperacion() {
       this.isFormVisible = false;
+      this.isDetalleVisible = false;
+      this.selectedCliente = null;
     },
     sortCliente() {
       this.clientes.sort((a, b) => new Date(b.date) - new Date(a.date));
     },
-
   },
- async mounted() {
+  async mounted() {
     try {
-      var result = await axios({
-        method: "POST",
-        url: "http://18.218.15.90:8080/graphql",
-        data: {
-          query: `{
+      const result = await axios.post('http://18.218.15.90:8080/graphql', {
+        query: `
+        {
           customers {
             email
             id
             name
             phone
           }
-          }
-          `
         }
+        `
       });
       this.clientes = result.data.data.customers;
-      this.sortCliente();  // Sort ventas after fetching
+      this.sortCliente();  // Sort clientes after fetching
     } catch (error) {
       console.error(error);
     }

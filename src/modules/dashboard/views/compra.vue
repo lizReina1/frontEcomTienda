@@ -1,26 +1,31 @@
 <template>
   <div>
     <compra-form v-if="isFormVisible" :compra="selectedCompra" :isEditing="isEditing" @submit="handleFormSubmit" @cancelar="cancelarOperacion"/>
-    <compra-list v-else :compras="compras" @create="handleCreate" @edit="handleEdit" @view="handleView" @delete="handleDelete" />
+    <compra-list v-else-if="!isDetalleVisible" :compras="compras" @create="handleCreate" @edit="handleEdit" @view="handleView" @delete="handleDelete" />
+    <compra-detalle v-if="isDetalleVisible" :compra-id="selectedCompra.id.toString()" @cancelar="cancelarOperacion" />
   </div>
 </template>
 
 <script>
 import CompraForm from '../components/CompraForm.vue';
 import CompraList from '../components/CompraList.vue';
-import axios from "axios";
+import CompraDetalle from '../components/CompraDetalle.vue'; // Importa el nuevo componente
+import axios from 'axios';
+
 export default {
   name: 'compra',
   components: {
     CompraForm,
-    CompraList
+    CompraList,
+    CompraDetalle
   },
   data() {
     return {
       compras: [],
       isFormVisible: false,
       isEditing: false,
-      selectedCompra: null
+      selectedCompra: null,
+      isDetalleVisible: false
     };
   },
   methods: {
@@ -35,11 +40,13 @@ export default {
       this.isFormVisible = true;
     },
     handleView(compra) {
-      // Aquí podrías implementar la lógica para ver los detalles de la compra.
-      alert(`Detalles de la compra: \nFecha: ${compra.fecha}\nTotal: ${compra.total}`);
+      this.selectedCompra = { ...compra };
+      this.isEditing = false;
+      this.isFormVisible = false;
+      this.isDetalleVisible = true;
     },
     handleDelete(id) {
-      this.compras = this.compras.filter(compra => compras.id !== id);
+      this.compras = this.compras.filter(compra => compra.id !== id);
     },
     handleFormSubmit(compra) {
       if (this.isEditing) {
@@ -50,15 +57,16 @@ export default {
       }
       this.isFormVisible = false;
     },
-     cancelarOperacion() {
+    cancelarOperacion() {
       this.isFormVisible = false;
+      this.isDetalleVisible = false;
+      this.selectedCompra = null;
     },
     sortCompras() {
       this.compras.sort((a, b) => new Date(b.date) - new Date(a.date));
     },
-
   },
- async mounted() {
+  async mounted() {
     try {
       var result = await axios({
         method: "POST",
@@ -85,11 +93,10 @@ export default {
         }
       });
       this.compras = result.data.data.purchases;
+      this.sortCompras();  // Sort ventas after fetching
     } catch (error) {
       console.error(error);
     }
   },
-  
-  
 };
 </script>

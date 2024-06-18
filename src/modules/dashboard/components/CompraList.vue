@@ -1,8 +1,8 @@
 <template>
-  <div  id="CompraList">
+  <div id="CompraList">
     <h4><strong>Compras</strong></h4>
     <div class="col-sm-4">
-        <button type="button" class="btn btn-info mb-3" @click="$emit('create')">Crear Compra</button>
+      <button type="button" class="btn btn-info mb-3" @click="$emit('create')">Crear Compra</button>
     </div>
     <div class="col">
     <table class="table">
@@ -79,7 +79,7 @@ export default {
   props: {
     compras: Array
   },
-data() {
+  data() {
     return {
       currentPage: 1,
       pageSize: 10,
@@ -88,8 +88,8 @@ data() {
 
     };
   },
- methods: {
-  filteredCompras() {
+  methods: {
+    filteredCompras() {
       if (!this.searchDate) return this.compras;
       const searchDate = new Date(this.searchDate);
       return this.compras.filter(compra => {
@@ -97,41 +97,49 @@ data() {
         return compraDate.toDateString() === searchDate.toDateString();
       });
     },
-  formatDate(dateString) {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  },
-     async getSupplierName(supplierId) {
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
+    async loadSupplierNames() {
+      if (!this.compras || this.compras.length === 0) return;
+
+      const supplierIds = [...new Set(this.compras
+        .filter(compra => compra && compra.supplier_id)
+        .map(compra => compra.supplier_id))];
+
+      for (const id of supplierIds) {
+        if (!this.supplierNames[id]) {
+          await this.fetchSupplierName(id);
+        }
+      }
+    },
+    async fetchSupplierName(supplierId) {
       try {
-        if (!this.supplierNames[supplierId]) {
-          const result = await axios.post('http://18.218.15.90:8080/graphql', {
-            query: `{
+        const result = await axios.post('http://18.218.15.90:8080/graphql', {
+          query: `{
                 supplier(id: "${supplierId}") {
                   id
                   name
                 }
               }
             `,
-          });
-          this.$set(this.supplierNames, supplierId, result.data.data.supplier.name);
+        });
+        const supplier = result.data.data.supplier;
+        if (supplier && supplier.id) {
+          this.$set(this.supplierNames, supplier.id, supplier.name);
         }
-        return this.supplierNames[supplierId];
       } catch (error) {
         console.error('Error obteniendo el nombre del proveedor:', error);
-        return 'Proveedor Desconocido';
+        this.$set(this.supplierNames, supplierId, 'Error al cargar');
       }
     },
-    async loadSupplierNames() {
-      const supplierIds = this.compras.map(compra => compra.supplier_id);
-      const uniqueSupplierIds = [...new Set(supplierIds)];
-      await Promise.all(uniqueSupplierIds.map(id => this.getSupplierName(id)));
-    }
-},
-computed: {
-   paginatedCompras() {
+  },
+  computed: {
+    paginatedCompras() {
       const startIndex = (this.currentPage - 1) * this.pageSize;
       const endIndex = startIndex + this.pageSize;
       return this.filteredCompras().slice(startIndex, endIndex);
@@ -139,7 +147,7 @@ computed: {
     totalPages() {
       return Math.ceil(this.filteredCompras().length / this.pageSize);
     },
-     visiblePageNumbers() {
+    visiblePageNumbers() {
       const numberOfPages = Math.min(5, this.totalPages);
       const middlePage = Math.ceil(numberOfPages / 2);
       const startPage = Math.max(1, this.currentPage - middlePage + 1);
@@ -147,18 +155,31 @@ computed: {
       return Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
     },
 
-},
-  mounted() { 
+  },
+  mounted() {
     this.loadSupplierNames();
-  const $datepicker7 = $(this.$refs.datetimepicker7).datepicker({
-    format: 'yyyy-mm-dd',
-    autoclose: true,
-  });
+    const $datepicker7 = $(this.$refs.datetimepicker7).datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+    });
 
-  // Configurar el mínimo y máximo valor del primer datepicker
-  $datepicker7.on('changeDate', (e) => {
-    $datepicker6.datepicker('setEndDate', e.date);
-  });
+    // Configurar el mínimo y máximo valor del primer datepicker
+    $datepicker7.on('changeDate', (e) => {
+      $datepicker6.datepicker('setEndDate', e.date);
+    });
+
+    this.loadSupplierNames();
+  },
+  watch: {
+    compras: {
+      handler() {
+        this.$nextTick(() => {
+          this.loadSupplierNames();
+        });
+      },
+      deep: true,
+      immediate: true
+    }
   }
 }
 </script>
