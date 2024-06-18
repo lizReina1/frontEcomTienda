@@ -84,7 +84,6 @@ export default {
         }
       });
       this.productos = result.data.data.products;
-      this.sortProductos();  
     } catch (error) {
       console.error(error);
     }
