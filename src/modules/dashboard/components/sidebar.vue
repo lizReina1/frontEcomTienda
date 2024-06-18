@@ -7,7 +7,7 @@
                     <h2 class="text-white text-center mb-4">LuxeStore</h2>
                     <ul class="list-unstyled">
                         <li v-if="showDashboardLink" :class="{ 'active': activeTab === 'Dashboard' }">
-                            <a href="#" @click="activateTab('Dashboard')"
+                            <a href="https://dashboardpython-production.up.railway.app/" @click="activateTab('Dashboard')"
                                 class="text-decoration-none d-flex align-items-center">
                                 <i class="fas fa-box pt-1 me-3"></i>
                                 <span class="link">Dashboard</span>

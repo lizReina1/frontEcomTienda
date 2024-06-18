@@ -1,4 +1,5 @@
 <template>
+  <div class="card">
     <div class="col">
       <h2>Detalles de la compra</h2>
       <table class="table">
@@ -43,12 +44,15 @@
           </tr>
         </tbody>
       </table>
-      <div class="row justify-content-center">
-            <div class="col-sm-4">
-              <button @click.prevent="cancelarOperacion" class="btn btn-dark">Volver</button>
-            </div>
+      <div class="card-footer d-flex justify-content-center"> <!-- Cambio en la clase para centrar -->
+        <div class="col-md-8 text-md-end"> <!-- Ajuste de clases para ocupar casi todo el ancho y alinear a la derecha en pantallas medianas -->
+          <button @click.prevent="cancelarOperacion" class="btn btn-dark w-100">Volver</button> <!-- Ancho del 100% para ocupar casi todo el ancho -->
+        </div>
       </div>
+
     </div>
+  </div>
+  
   </template>
   
   <script>
